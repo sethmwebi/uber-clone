@@ -30,4 +30,16 @@ export default StyleSheet.create({
 		color: "gray",
 		fontSize: 15,
 	},
+	button: {
+		backgroundColor: "black",
+		marginTop: "auto",
+		padding: 20,
+		margin: 10
+	},
+	buttonText: {
+		color: "white",
+		textAlign: "center",
+		fontWeight: "700",
+		fontSize: 20
+	}
 });

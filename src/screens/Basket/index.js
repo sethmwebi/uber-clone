@@ -1,24 +1,33 @@
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import { View, Text, StyleSheet, FlatList, Pressable } from "react-native";
 import { useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
-import restaurants from "../../../assets/data/restaurants.json";
 import BasketDishItem from "../../components/BasketDishItem"
-
-const restaurant = restaurants[0];
+import { useBasketContext } from "../../context/BasketContext"
+import { useOrderContext } from "../../context/OrderContext"
+import { useNavigation } from "@react-navigation/native"
 
 const Basket = () => {
+	const { restaurant, basketDishes, totalPrice } = useBasketContext()
+	const { createOrder } = useOrderContext()
+	const navigation = useNavigation()
+
+	const onCreateOrder = async () => {
+		await createOrder()
+		navigation.goBack()
+	}
+
 	return (
 		<View style={styles.page}>
-			<Text style={styles.name}>{restaurant.name}</Text>
-			<Text style={{fontWeight: "bold", marginTop: 20, fontSize: 19}}>Your Items</Text>
+			<Text style={styles.name}>{restaurant?.name}</Text>
+			<Text style={{fontWeight: "bold", marginTop: 20, fontSize: 19}}>Your Itemss</Text>
 
-			<FlatList data={restaurant.dishes} renderItem={({ item }) => <BasketDishItem basketDish={item}/>}/>
+			<FlatList data={basketDishes} renderItem={({ item }) => <BasketDishItem basketDish={item}/>}/>
 
 			<View style={styles.separator} />
 
-			<View style={styles.button}>
-				<Text style={styles.buttonText}>Create Order</Text>
-			</View>
+			<Pressable onPress={onCreateOrder} style={styles.button}>
+				<Text style={styles.buttonText}>Create Order  &#8226; ${totalPrice.toFixed(2)}</Text>
+			</Pressable>
 		</View>
 	);
 };
