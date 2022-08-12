@@ -15,12 +15,19 @@ import orders from "../../../assets/data/orders.json";
 import OrderItem from "../../components/OrderItem";
 import MapView, { Marker } from "react-native-maps";
 import { Entypo } from "@expo/vector-icons";
+import { DataStore } from "aws-amplify"
+import { Order } from "../../models"
 
 const OrdersScreen = () => {
+	const [orders, setOrders] = useState([])
 	const bottomSheetRef = useRef(null);
 	const { width, height } = useWindowDimensions();
 
 	const snapPoints = useMemo(() => ["12%", "95%"], []);
+
+	useEffect(() => {
+		DataStore.query(Order, (order) => order.status("eq", "READY_FOR_PICKUP")).then(setOrders)
+	},[])
 
 	return (
 		<GestureHandlerRootView style={{ backgroundColor: "lightblue", flex: 1 }}>

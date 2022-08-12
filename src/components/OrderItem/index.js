@@ -1,10 +1,17 @@
-import { StatusBar } from "expo-status-bar";
+import { useState, useEffect } from "react"
 import { StyleSheet, Text, View, Image, Pressable } from "react-native";
 import { Entypo } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native"
+import { useNavigation } from "@react-navigation/native";
+import { DataStore } from "aws-amplify";
+import { User } from "../../models"
 
 const OrderItem = ({ order }) => {
   const navigation = useNavigation()
+  const [user, setUser] = useState(null)
+
+  useEffect(() => {
+    DataStore.query(User, order.userID).then(setUser)
+  },[])
   return (
     <Pressable
       style={{
@@ -31,8 +38,8 @@ const OrderItem = ({ order }) => {
         </Text>
         <Text style={{ color: "gray" }}>{order.Restaurant.address}</Text>
         <Text style={{ marginTop: 10 }}>Delivery Details</Text>
-        <Text style={{ color: "gray" }}>{order.User.name}</Text>
-        <Text style={{ color: "gray" }}>{order.User.address}</Text>
+        <Text style={{ color: "gray" }}>{user?.name}</Text>
+        <Text style={{ color: "gray" }}>{user?.address}</Text>
       </View>
       <View
         style={{
